@@ -39,7 +39,11 @@ class Player:
         # self.app.cell_width, self.app.cell_height), 1)
 
     def on_coin(self):
-        return self.grid_pos in self.app.coins
+        return self.grid_pos in self.app.coins and \
+            (int(self.pix_pos.x + TOP_BOTTOM_BUFFER // 2) % self.app.cell_width == 0 or \
+            int(self.pix_pos.y + TOP_BOTTOM_BUFFER // 2) % self.app.cell_height == 0) and \
+                (self.direction == vec(1, 0) or self.direction == (-1, 0) or \
+                self.direction == vec(0, 1) or self.direction == (0, -1))
 
     def eat_coin(self):
         self.app.coins.remove(self.grid_pos)

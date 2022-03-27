@@ -7,8 +7,8 @@ import pygame
 
 from player_class import Player
 from settings import (BLACK, FPS, GREY, HEIGHT, MAP_HEIGHT, MAP_WIDTH,
-                      PLAYER_START_POS, START_FONT, START_TEXT_SIZE,
-                      TOP_BOTTOM_BUFFER, WHITE, WIDTH)
+                      START_FONT, START_TEXT_SIZE, TOP_BOTTOM_BUFFER, WHITE,
+                      WIDTH)
 
 pygame.init()
 vec = pygame.math.Vector2
@@ -21,11 +21,13 @@ class App:
         self.state = 'start'
         self.cell_width = MAP_WIDTH//28
         self.cell_height = MAP_HEIGHT//30
-        self.player = Player(self, PLAYER_START_POS)
         self.walls = []
         self.coins = []
+        self.p_pos = None
 
         self.load()
+
+        self.player = Player(self, self.p_pos)
 
     def run(self):
         while self.running:
@@ -65,6 +67,8 @@ class App:
                         self.walls.append(vec(xidx,yidx))
                     elif char == 'C':
                         self.coins.append(vec(xidx,yidx))
+                    elif char == 'P':
+                        self.p_pos = vec(xidx,yidx)
 
     def draw_grid(self):
         for x in range(WIDTH//self.cell_width):
