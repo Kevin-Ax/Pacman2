@@ -5,6 +5,7 @@ from turtle import width
 
 import pygame
 
+from enemy import Enemy
 from player_class import Player
 from settings import (BLACK, FPS, GREY, HEIGHT, MAP_HEIGHT, MAP_WIDTH,
                       START_FONT, START_TEXT_SIZE, TOP_BOTTOM_BUFFER, WHITE,
@@ -23,7 +24,9 @@ class App:
         self.cell_height = MAP_HEIGHT//30
         self.walls = []
         self.coins = []
+        self.e_pos = []
         self.p_pos = None
+        self.enemies = []
 
         self.load()
 
@@ -69,6 +72,12 @@ class App:
                         self.coins.append(vec(xidx,yidx))
                     elif char == 'P':
                         self.p_pos = vec(xidx,yidx)
+                    elif char in ['2', '3', '4', '5']:
+                        self.e_pos.append(vec(xidx,yidx))
+
+    def make_enemies(self):
+        for pos in self.e_pos:
+            self.enemies.append(Enemy(self, pos))
 
     def draw_grid(self):
         for x in range(WIDTH//self.cell_width):
@@ -115,6 +124,8 @@ class App:
 
     def playing_update(self):
         self.player.update()
+        for enemy in self.enemies:
+            enemy.update()
 
     def playing_draw(self):
         self.screen.fill(BLACK)
@@ -124,6 +135,8 @@ class App:
         self.draw_text(f'Pontuação atual: {self.player.current_score}', self.screen, [60,0], 18, WHITE, START_FONT, center=False)
         self.draw_text('Maior Pontuação: 0', self.screen, [WIDTH//2+60,0], 18, WHITE, START_FONT, center=False)
         self.player.draw()
+        for enemy in self.enemies:
+            enemy.draw()
         pygame.display.update()
 
     def draw_coins(self):
