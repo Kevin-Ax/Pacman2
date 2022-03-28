@@ -5,8 +5,7 @@ from turtle import width
 
 import pygame
 
-from enemy import Enemy
-from enemy_class import *
+from enemy_class import Enemy
 from player_class import Player
 from settings import (BLACK, FPS, GREY, HEIGHT, MAP_HEIGHT, MAP_WIDTH,
                       START_FONT, START_TEXT_SIZE, TOP_BOTTOM_BUFFER, WHITE,
