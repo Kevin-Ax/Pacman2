@@ -6,6 +6,7 @@ from turtle import width
 import pygame
 
 from enemy import Enemy
+from enemy_class import *
 from player_class import Player
 from settings import (BLACK, FPS, GREY, HEIGHT, MAP_HEIGHT, MAP_WIDTH,
                       START_FONT, START_TEXT_SIZE, TOP_BOTTOM_BUFFER, WHITE,
@@ -24,6 +25,7 @@ class App:
         self.cell_height = MAP_HEIGHT//30
         self.walls = []
         self.coins = []
+        self.enemies = []
         self.e_pos = []
         self.p_pos = None
         self.enemies = []
@@ -31,6 +33,7 @@ class App:
         self.load()
 
         self.player = Player(self, self.p_pos)
+        self.make_enemies()
 
     def run(self):
         while self.running:
@@ -72,12 +75,16 @@ class App:
                         self.coins.append(vec(xidx,yidx))
                     elif char == 'P':
                         self.p_pos = vec(xidx,yidx)
-                    elif char in ['2', '3', '4', '5']:
-                        self.e_pos.append(vec(xidx,yidx))
+                    elif char in ["2","3","4","5"]:
+                        self.e_pos.append(vec(xidx, yidx))
+                    elif char == "B":
+                        pygame.draw.rect(self.background, BLACK, (xidx*self.cell_width, yidx*self.cell_height,
+                                        self.cell_width, self.cell_height))
+
 
     def make_enemies(self):
-        for pos in self.e_pos:
-            self.enemies.append(Enemy(self, pos))
+        for idx, pos in enumerate(self.e_pos):
+            self.enemies.append(Enemy(self, pos, idx))
 
     def draw_grid(self):
         for x in range(WIDTH//self.cell_width):
