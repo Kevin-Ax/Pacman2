@@ -1,12 +1,9 @@
 import random
 from enum import Enum
-from operator import truediv
-from typing import List, Optional
 
-import numpy as np
 import pygame
 
-from settings import COLS, PLAYER_COLOUR, ROWS, TOP_BOTTOM_BUFFER, WHITE, vec
+from settings import COLS, ROWS, TOP_BOTTOM_BUFFER, vec
 
 vec = pygame.math.Vector2
 
@@ -19,6 +16,7 @@ class Enemy:
 
     def __init__(self, app, pos, number):
         self.app = app
+        self.starting_pos = [pos.x, pos.y]
         self.grid_pos = pos
         self.pix_pos = self.get_pix_pos()
         self.radios = int(self.app.cell_width//2.3)

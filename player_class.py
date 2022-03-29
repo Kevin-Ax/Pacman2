@@ -1,6 +1,6 @@
 import pygame
 
-from settings import PLAYER_COLOUR, TOP_BOTTOM_BUFFER, vec
+from settings import HEIGHT, PLAYER_COLOUR, TOP_BOTTOM_BUFFER, vec
 
 
 class Player:
@@ -13,6 +13,8 @@ class Player:
         self.able_to_move = True
         self.current_score = 0
         self.speed = 2
+        self.lives = 3
+        self.starting_pos = [pos.x, pos.y]
 
     def update(self):
         if self.able_to_move:
@@ -38,6 +40,10 @@ class Player:
         # (self.grid_pos[0]*self.app.cell_width+TOP_BOTTOM_BUFFER//2,
         # self.grid_pos[1]*self.app.cell_height+TOP_BOTTOM_BUFFER//2,
         # self.app.cell_width, self.app.cell_height), 1)
+
+        # Desenhando vida do pacman
+        for i in range(self.lives):
+            pygame.draw.circle(self.app.screen, PLAYER_COLOUR, (30 + 20 * i, HEIGHT - 15), 7)
 
     def on_coin(self):
         return self.grid_pos in self.app.coins and \
