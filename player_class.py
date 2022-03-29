@@ -8,7 +8,7 @@ class Player:
         self.app = app
         self.grid_pos = pos
         self.pix_pos = self.get_pix_pos()
-        self.direction = vec(1,0)
+        self.direction = vec(0,0)
         self.stored_direction = None
         self.able_to_move = True
         self.current_score = 0
@@ -64,11 +64,11 @@ class Player:
         (self.grid_pos.y*self.app.cell_height)+TOP_BOTTOM_BUFFER//2+self.app.cell_height//2)
 
     def time_to_move(self):
-        if int(self.pix_pos.x + TOP_BOTTOM_BUFFER//2) % self.app.cell_width == 0:
-            if self.direction == vec(1,0) or self.direction == vec(-1,0):
+        if int(self.pix_pos.x+TOP_BOTTOM_BUFFER//2) % self.app.cell_width == 0:
+            if self.direction == vec(1, 0) or self.direction == vec(-1, 0) or self.direction == vec(0, 0):
                 return True
-        if int(self.pix_pos.y + TOP_BOTTOM_BUFFER//2) % self.app.cell_height == 0:
-            if self.direction == vec(0,1) or self.direction == vec(0,-1):
+        if int(self.pix_pos.y+TOP_BOTTOM_BUFFER//2) % self.app.cell_height == 0:
+            if self.direction == vec(0, 1) or self.direction == vec(0, -1) or self.direction == vec(0, 0):
                 return True
 
     def can_move(self):
