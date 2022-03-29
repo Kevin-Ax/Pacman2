@@ -7,9 +7,9 @@ import pygame
 
 from enemy_class import Enemy
 from player_class import Player
-from settings import (BLACK, FPS, GREY, HEIGHT, MAP_HEIGHT, MAP_WIDTH,
-                      START_FONT, START_TEXT_SIZE, TOP_BOTTOM_BUFFER, WHITE,
-                      WIDTH)
+from settings import (BLACK, COLS, FPS, GREY, HEIGHT, MAP_HEIGHT, MAP_WIDTH,
+                      ROWS, START_FONT, START_TEXT_SIZE, TOP_BOTTOM_BUFFER,
+                      WHITE, WIDTH)
 
 pygame.init()
 vec = pygame.math.Vector2
@@ -20,8 +20,8 @@ class App:
         self.clock = pygame.time.Clock()
         self.running = True
         self.state = 'start'
-        self.cell_width = MAP_WIDTH//28
-        self.cell_height = MAP_HEIGHT//30
+        self.cell_width = MAP_WIDTH // COLS
+        self.cell_height = MAP_HEIGHT // ROWS
         self.walls = []
         self.coins = []
         self.enemies = []

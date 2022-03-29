@@ -6,7 +6,7 @@ from typing import List, Optional
 import numpy as np
 import pygame
 
-from settings import PLAYER_COLOUR, TOP_BOTTOM_BUFFER, WHITE, vec
+from settings import COLS, PLAYER_COLOUR, ROWS, TOP_BOTTOM_BUFFER, WHITE, vec
 
 vec = pygame.math.Vector2
 
@@ -15,7 +15,7 @@ class Enemy:
         SPEEDY = 0
         SLOW = 1
         RANDOM = 2
-        SCARRED = 3
+        SCARED = 3
 
     def __init__(self, app, pos, number):
         self.app = app
@@ -26,16 +26,40 @@ class Enemy:
         self.colour = self.set_colour()
         self.direction = vec(0, 0)
         self.person = self.set_personality()
+        self.target = None
+        self.speed = self.set_speed()
 
     def update(self):
-        self.pix_pos = self.pix_pos + self.direction
-        if self.time_to_move():
-            self.move()
+        self.target = self.set_target()
+        if self.target != self.grid_pos:
+            self.pix_pos = self.pix_pos + self.direction * self.speed
+            if self.time_to_move():
+                self.move()
+
         self.grid_pos[0] = (self.pix_pos[0]-TOP_BOTTOM_BUFFER+self.app.cell_width//2)//self.app.cell_width+1
         self.grid_pos[1] = (self.pix_pos[1]-TOP_BOTTOM_BUFFER+self.app.cell_height//2)//self.app.cell_height+1
 
     def draw(self):
         pygame.draw.circle(self.app.screen, self.colour, (int(self.pix_pos.x), int(self.pix_pos.y)), self.radios)
+
+    def set_speed(self):
+        if self.person in [self.Personality.SPEEDY, self.Personality.SCARED]:
+            return 2
+        else:
+            return 1
+
+    def set_target(self):
+        if self.person == self.Personality.SPEEDY or self.person == self.Personality.SLOW:
+            return self.app.player.grid_pos
+        else:
+            if self.app.player.grid_pos.x > COLS // 2 and self.app.player.grid_pos.y > ROWS // 2:
+                return vec(1, 1)
+            if self.app.player.grid_pos.x > COLS // 2 and self.app.player.grid_pos.y < ROWS // 2:
+                return vec(1, ROWS - 2)
+            if self.app.player.grid_pos.x < COLS // 2 and self.app.player.grid_pos.y > ROWS // 2:
+                return vec(COLS - 2, 1)
+            else:
+                return vec(COLS - 2, ROWS - 2)
 
     def time_to_move(self):
         if int(self.pix_pos.x+TOP_BOTTOM_BUFFER//2) % self.app.cell_width == 0:
@@ -49,17 +73,23 @@ class Enemy:
     def move(self):
         if self.person == self.Personality.RANDOM:
             self.direction = self.get_random_direction()
-        else:
-            self.direction = self.get_path_direction()
+        elif self.person == self.Personality.SPEEDY:
+            self.direction = self.get_path_direction(self.target)
+        elif self.person == self.Personality.SLOW:
+            self.direction = self.get_path_direction(self.target)
+        elif self.person == self.Personality.SCARED:
+            self.direction = self.get_path_direction(self.target)
 
-    def get_path_direction(self):
-        next_cell = self.find_next_cell_in_path()
+    def get_path_direction(self, target):
+        next_cell = self.find_next_cell_in_path(target)
         x_dir = next_cell[0] - self.grid_pos[0]
         y_dir = next_cell[1] - self.grid_pos[1]
         return vec(x_dir, y_dir)
 
-    def find_next_cell_in_path(self):
-        path = self.BFS([int(self.grid_pos.x), int(self.grid_pos.y)], [int(self.app.player.grid_pos.x), int(self.app.player.grid_pos.y)])
+    def find_next_cell_in_path(self, target):
+        path = self.BFS(
+            [int(self.grid_pos.x), int(self.grid_pos.y)],
+            [int(target.x), int(target.y)])
 
         return path[1]
 
@@ -136,4 +166,4 @@ class Enemy:
         elif self.number == 2:
             return self.Personality.RANDOM
         else:
-            return self.Personality.SCARRED
+            return self.Personality.SCARED
